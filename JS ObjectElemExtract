@@ -1,0 +1,39 @@
+// Online Javascript Editor for free
+// Write, Edit and Run your Javascript code using JS Online Compiler
+
+// console.log("Welcome to Programiz!");
+
+const Avengers = [
+  {
+    fname: 'tony',
+    lname: 'stark',
+    age: 30,
+    gender: 'M',
+    powers: ['intelligence', 'money'],
+  },
+  {
+    fname: 'natasha',
+    lname: 'romonov',
+    age: 23,
+    gender: 'F',
+    powers: ['intelligence', 'slow ageing'],
+  },
+];
+
+function Select(stringToSelect, from) {
+  const propertiesToSelect = stringToSelect.split(',');
+
+  const result = from.map(element => {
+    const selectedValues = {};
+    propertiesToSelect.forEach(property => {
+      selectedValues[property] = element[property];
+    });
+    return selectedValues;
+  });
+
+  return result;
+}
+
+const list = Select('fname,lname,age', Avengers);
+
+console.log(list);
