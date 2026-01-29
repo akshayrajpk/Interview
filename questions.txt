@@ -1,0 +1,225 @@
+streams
+kafka
+ci cd pipeline
+circuit breaker
+rate limiter
+asynchronous communication between microservices
+sql vs nosql
+java version differences
+optiona Class
+internal implementation of ArrayList
+ArrayList vs LinkedList
+collision in Map
+Logging implementation
+.
+.
+.
+.
+.
+.
+J       I           O 
+Migration from Spring 2 to 3
+Jwt
+Spring Security
+@Bean Vs @Component
+SecurityFilterChain
+Kafka Implementation in my project
+Elastic Search Vs Bigquery
+SQL VS NOSQL
+Mysql VS Elastic Search
+Public Vs private key
+Producer Consumer
+Zoro — 24-01-2025 08:21
+Sharding
+Insertion in shrding
+Internal implementation of set
+Zoro — 28-01-2025 18:26
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+GREYTHR
+Comm btw microservices
+Challenges in migrating to micro
+Cloud config
+Monitoring ways
+Advantages of microservices
+Beans types
+Dependency injection
+Memory management in java
+Beanfactory vs appcontext
+Application.properties
+A challenging thing you have worked on
+Handling issues
+.
+.
+.
+.
+
+Zoro — 28-01-2025 18:34
+How spring boot handles autoconfig
+Diff btw spring and boot
+Zoro — 29-01-2025 09:34
+Rest api best practices
+Zoro — 31-01-2025 17:56
+Kafka uses whivh protocol
+What are Records
+How to sort map inplace
+Stream padho pura
+Will the app work if we mark all the classes with @Component
+Cons of microservices
+Java 8
+Functional programming
+Strategies in implementing redis cache
+Zoro — 31-01-2025 22:12
+what is the difference between oauth and jwt
+Zoro — 18-02-2025 14:57
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..
+NET APP
+how http works
+size of a pointer
+what is rest api
+shift an array around
+Zoro — 20-02-2025 22:59
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+E2OPEN
+
+What is bufferedreader
+How did you implemented parallellism in your application
+Zoro — 11-03-2025 15:10
+Getting data from multiple endpoints and storing it in db
+Use cases of kafka
+React child component data
+Zoro — 11-03-2025 16:05
+How did you implement Redis cache and its structure
+How did you migrate from ElasticSearch to bigquery
+What is the daily size of messages in kafka
+Performance in db using hibernate and jpa repo 
+resume lines in accenture
+Wrtie a logic to read a large data ( file, kafka, db) and find a string ex: "Aakarsh" if its present
+How do you shut down and microservice and manage it.
+Zoro — 12-03-2025 14:27
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+CAPGEMINI
+
+Lazy loading
+Functional interface
+Singleton class
+Marker interface
+Runtime and compile time polymorphism
+Java 8 features
+Restcontroller vs controller
+Can we do delet eusing @postmapping
+Componentscan
+Advantage of spring boot
+What are the ways to create instance in java
+What does immutable mean
+Hashmap vs hashtable
+Arraylist vs linkedlist 
+Internal implementation of hashmap
+Beanmapper
+Data jpa
+Zoro — 12-03-2025 15:14
+What are records
+Zoro — 19-07-2025 14:41
+.
+.
+.
+.
+.
+.
+.
+.
+.HCLTECH
+
+how spring boot manages autoconfig
+Ways to create instance in spring
+Why do we need interface
+How @bean works
+How can you conect ec2 instance with s3 bucket
+What are steps used for modernization?
+Arraylist vs synchronized collection
+What if two threads using same arraylist instance
+Tell me about day to day task in powerschool
+How to improve performance of lambda
+Use of netwok in cloud 
+Vpc
+How to fix circular dependency in java
+Zoro — 30-07-2025 10:54
+failfast and failsafe
+lazy and eager loading
+circuit breaker
+deadlock example
+hashmap working
+collision
+concurrent map
+scope in spring
+why we use string in spring security and not string buffer
+where does string instance and literals gets stored
+how does string instance gets stored in heap
+left join and right join
+adapter design pattern
+patterns in spring
+singleton
+prototype
+decorator in angular
+template in angular
+why spring boot
+transactional related something
+types of annotation used in business layer
+IOC container
+rabbitmq/kafka implementation
+Zoro — 30-07-2025 11:04
+@Value
+Java 8 features
+Zoro — 02-11-2025 18:40
+Optional.empty
+Optional.of
+Best sorting method for list
+Stream.peek
+Trigger set in sql
+Cors spring
+LAzy loading spring
+Zoro — 19-11-2025 14:48
+AIRBUS 
+
+What do you know about full stack?
+What is your day to day task?
+Reason for change
+Challenges facing in current role.

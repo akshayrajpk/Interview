@@ -1,0 +1,312 @@
+actuators - dependency, configuration, app.property
+
+Change default port in actuator, not server port
+
+AOP - Scenario we use aop - exception handling, global exception handling, logging, transaction management, security, performance monitoring, etc.
+
+Exceptions, how to handle (global exception handling, exception handling in service layer, exception handling in controller layer, exception handling in repository layer, exception handling in data access layer, exception handling in view layer, exception handling in web layer, exception handling in service layer, exception handling in controller layer, exception handling in repository layer, exception handling in data access layer, exception handling in view layer, exception handling in web layer)
+
+Controller advice for exception, (not found to throw, then that method is called, exception.class, multiple handler in single exception handler)
+
+ 
+
+Monolithic to micro service, how do we convert them to service (oder, payment, inventory, etc.)
+
+Sale, how to handle the traffic (load balancer, circuit breaker, etc.). Horizontal scaling, vertical scaling, etc.
+
+Fault talurance, how to handle the fault (load balancer, circuit breaker, etc.)
+
+How to divide request load balance, Fien client, round robin, eureka server.
+
+Rest template vs feign client, when to use.
+
+Why feign client is better than rest template?
+
+How many db's, which one, dedicated db vs shared db.
+
+One service how can we manage rollback, distributed transaction, saga pattern - how it works, what rollback we need to implement
+
+Thw phace commit what is that? what is ACID?
+
+Security, how to handle? JWT, OAuth, etc. Resource server and authorisation server, how it works, how to implement.
+
+Flow of auth server, how is the interf=action, JWT why, what else can we use
+
+Working of the VCS.
+
+Profiling.
+
+One property common for all the micro service how to manage? Configuration how it is managed for different profiles? same vs diplicate properties
+
+Config servers how to implement and how it works
+
+Unit vs Integration tests
+
+Scenarios where to use mokito? Service calls, db
+
+Why to mock calls to another service?
+
+ 
+
+Why docker?
+
+HOW TO Manage containers
+
+Kubernetes roles what does it do?
+
+How to increase the Jar version, where is the release version noted.
+
+Jenkins pipeline followed Terraform.
+
+Coding design patterns singleton where? Builder where?
+
+SOLID principles How it is implemented
+
+Kibana (Log monitoring, elastic search) service that send data to kibana
+
+Cloud watch - uses
+
+How do micro service interact with each other, Sync and Async, service discovery, feign client vs eureca server. All this is syncronous communication, How to deal with asyncronous. Kafka
+
+Scenario for async and sync. Immediate resp sync not immediate, async IBMB queue.
+
+Localhost 8080, actuator needs to diff from server security threat, AOP need to track the logiing time for each method time, annotations, security, distributed transaction, saga cqrs, 2PC vs Saga. Code duplication (PR review), mocking the DB Changes. CI cd jobs.
+
+ 
+
+-------------------------------------------------------------------------
+
+Spring security, jwt, ttl, refresh tokens, what kind of authorisation tokens O auth, spring security, Octa,
+
+Octa api key, redirect urls, access tokens, FE -> Octa access (KEys) tokens -> Then endpoint _> Store keys in application then hit the be.
+
+Hash (signature, password) How do we validate token in the BE, DB authentication
+
+Schedulers - spring scheduler - ends adding 3 times, Shedlock reun only once.
+
+Caching - redis caching, In memory catching DB in same or different server - Same server cache it, Dirty read in catching eventual catching, Hibernate eclipse link, entity level caching, session, session factory, session l1, session factory l2, session factory is singleton because it is costly so it can be reused. 3 apps how many session factories can be created 3 needed db specific,
+
+Graphql vs rest api- Fine train course grain, Json ignore, DTO selection to return limited data,
+
+External config, property or yml files difference, YML is structured in the way we can write better
+
+Distributed transactions -> In monolithic, one tranc all operation, distributed - rollback, sync and async saga pattern no rollback reverse the transaction, 2PC.
+
+Design the ecommerce website - client, load balancer proxy ingenix, limit handlers, rate limiters, web service, lb decides which instance to use, search service with redis cache, No sql cassandra db for search, AWS elastic search, cart service use CAP algorithm use my sql, Rest template or feign client, Saga pettern to do the transaction. Kafka in the placing order service no because is async and cause false data, User and product service, Saga has no atomic, place oder and assign delivery partner. Kafka for notification service, oder tracking sql, (Apache spark) extra analytics.
+
+Optimise queries - Indexing, Partitioning and sharding.
+
+Lag in kafka topic, Kafka leader and worker, Garbage collections.
+
+Adding the paginations- lazy loading, infinite scrolling in the UI, in the be batch operations, JPA next batch and Throtling debouncing to make search.
+
+Profiling in cicd, application.property, How jenkins or any cicd tools work. Docker for containerisation.
+
+Kubernetis for aurchrectration for scaling. Pods scaling and restart.
+
+Loop back crach in the kubernitics how to handle? Rancher for logs
+
+Rollback strategy for false codes. Images with version numbers terraform infra as a service. Azure Kulami B2c alert partings, Alert as an infrastructure
+
+What was included and included in testing, Junit 5 nested classed, mocking db calls, Sonarcube code coverage, DTO's how do we test for getters and setters we dont do. Where is that exclution, write regex not include POJO files, Integration test for all the issues.
+
+Reactive vs blocking programming, threads are limited, call back after one thread is Flex and mono. Reactor used project reactor. Gradle is faster this is build tool. Pom is used for versioning to avoid manual copypaste.
+
+Kanban uses scrum architecture. Agile methodology.
+
+Concurrent hash map vs normal hashmap failed first method, Hash size change normal throw error. Internal working, synchronise mutual exclution, 16/2 thred can access write, segment lock is added to threads, better in synchronous.
+
+How to make class for key, Override equal and hashcode to make key as unique.
+
+ 
+
+-----------------------------------------------------------------
+
+ 
+
+New features in java 8, lambda functional interface, method reference, streams map, filter, reduce(work on multiple element simultaneous), Date time api with of.
+
+Map table to pojo, using annnotations entity,
+
+@bean (control how to create the object) config class and method vs @component Ioc and DI
+
+Dependency injection, bean scope session vs http scope vs global scope bean, by default its singleton scope.
+
+A nd b need c, autowired c in class b nd a, Task done in b will a be able to use it?
+
+What spring containers do we ahve in spring, application context and xml bean factory (Lazy loaded, only xml).
+
+Eager vs lazy loading in context of bean.
+
+Pagination pageable interface, Find all Find in all, JPA pass pageable. In UI passed as json, page and page size.
+
+Catching @enable catching, function resposible to catche.
+
+Orm inbuilt catching, hibernate 2 level catching, session and session factory. Session end cache gone, 2nd layer overcome this
+
+@controler Advice, @exception hadler,
+
+Global exception handler, If we have good exception handler, exception handler, custom exception,
+
+sql exception how to handle, @repository unchecked excep, service layer try catch block- controller advice.
+
+Custom exception how to create, Throw vd throws, unchecked throws, checked throw throw new() do we need throws?
+
+@query complex query, native query HQL jpa, criteria query, criteria is used only for fetch
+
+Gradle vs maven gradle dsl lang dependency management, config and exec phase in gradle.
+
+Pom apart from depedency management, directories, war not jar use package in pom, war and jar plugins. Adding dependency exclude in pludin management part, nexted dependency, @exclude tomcat
+
+Listner to catch, @assert throws
+
+All even numbers in list equal to a number
+
+ 
+
+nums.stream().filter(a -> a%2==0).mapToInt(Integer::intValue).sum();
+
+ 
+
+Convert string to upper case and join using ,
+
+ 
+
+value.stream()map(String::toUpperCase).collect(Collectors,joining(",")); Intermediate not work until terminal
+
+ 
+
+Employee highest salary in java 8
+
+Nth smallest element in an unsorted array
+
+ 
+
+Working flow full applications
+
+event trigger http _> observable -> Pagination in controller level query paran -> service layer pagination to pagable -> Repo layer return page object, FE var store pagination, controller advice, also excepton.
+
+Observable will subscribe , cors how to allow, allow origin @cross origin
+
+ 
+
+What is data binding, what is there in angular property, attribure,interpolation two way binding.
+
+Button click is event binding, form event,
+
+SPA - Part paage is changed, Not whole page, typescript vs javascript compiler, nullchecks,
+
+Encryption and minimize code for security.
+
+Decorators, selectors and stylesheet, templates, pipes in angular, custom pipe use cases. Pipe transform interfacewhen to use
+
+AOT and JIT in angular build vs execution aot build JIT compile time
+
+Promises and observables when do we use obsev is lazy load.
+
+services in angular.
+
+@input and output, property binding 2 way
+
+Routers and router links. Angular routes, router outlet SPA why is used
+
+Http intercertors when to use auth token to send it.
+
+ 
+
+--------------------------------------------------------------
+
+Class not found exception
+
+Hashmap working, what happens when 2 Keys have same hashcode
+
+Concurrent hashmap
+
+Immutable classes using final and private members, no setter methods
+
+Transaction management in spring @transactional
+
+Can we customise specific auto configuration in SB
+
+Pubsub pattern, publisher subscriber pattern
+
+Maven lifecycle clean, site,
+
+Ensure how app is maintainable and resclable - loose coupling, solid principles
+
+Exception handling, controller advice, Method level exception handler
+
+Log analyses tool - Kibana, splunk
+
+integration 3rd party services, Paypal, pricing service 3rd party
+
+How do we handle memory leaks in the application
+
+How to ensure security - spring security,
+
+Crdinality in designing the project
+
+Count of each character using stream
+
+===================================================================================
+
+New features in java 8 Predicate, consumer
+
+Functional interface why was it introduced
+
+Y is java not burely object oriented because of primitiive integer
+
+Collection needs wrapper class
+
+Internal working Hashmap, threshold > x LL in java 8 LL into tree,
+
+GC changes in java 8, perm gen in java 8 metaspace vs pamgen'
+
+Stactic and other stored in permgen
+
+default in interface (Add mor func to  interface)
+
+Y multiple inher not imple, how can we use - using interface
+
+How multiple interface inheritence not effect dimond problem
+
+Eat and drink in 2 interfaces default method if extended bith how will the implementation work- Super keyword used to solve this
+
+Optional in java 8
+
+Distributed transaction in ms- event driven pattern - saga pattern
+
+Types of saga choreo and aurchestration, drawbacks of both aurchestration disadvantage
+
+Transaction inside single service, Method level transactional annotation
+
+Propogation and isolation level
+
+10 ms hit FE, URL dynamic change continuous,
+
+Req - api gateway, load bal, ,  service discovery,
+
+Logging - Trace id, span id.
+
+Logs in production, kibana, grafana,
+
+Alerting system for exception aws cloud watch alarms
+
+Log in ur sourcecode reach Kibana, SL4j, logging statement How does it reach kibana, ElasticSearch -> kibana
+
+Spring cloud config server, app.property to add all the configuration. Config client, spring.cloud.config
+
+Branching techniques, envs, profile and roles
+
+How deployment is done?
+
+Springboot 3, observerbality and micrometer.
+
+Change the hosting server from tomcat
+
+Profiling
+
+---------------------------------------------------------------------------
+EnableAuth2SSO - need to make auth 2 work https://www.youtube.com/watch?v=UsXcWXg216E
+
+ 

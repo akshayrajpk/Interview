@@ -1,0 +1,124 @@
+https://medium.com/@asishpanda444/stream-api-coding-qna-8df8682b7e2a - 40
+https://medium.com/@ucgorai/java-8-features-that-every-programmer-must-know-39e73a1daafb
+https://medium.com/@yashodhara.chowkar/internal-working-of-hashmap-in-java-and-performance-improvement-in-java-8-a28ee1660cda
+https://medium.com/@reetesh043/difference-between-completablefuture-and-future-in-java-4f7e00bcdb56
+https://medium.com/@reetesh043/completablefuture-in-java-1f972e96fab8
+https://medium.com/@reetesh043/future-interface-in-java-ef9ade2b97b0
+https://medium.com/@AlexanderObregon/introduction-to-sorting-algorithms-in-java-a-beginners-guide-db522047effb
+https://www.geeksforgeeks.org/java/java-8-optional-class/
+https://medium.com/javarevisited/java-completablefuture-c47ca8c885af
+
+@profile(dev) (prod)
+@value(${})
+@size(Min max)
+@
+
+import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    public static void main(String[] args) {
+      Map<?,?> lis = Stream.of(1,2,3,4,5,6,7,1,2)
+      .map(a -> a+1)
+      // .collect(Collectors.toList());
+      .collect(Collectors.toMap(c->c, c-> c+1, (a,b)->a));
+      System.out.println(lis);
+      
+      List<Integer> numbers = Arrays.asList(3, 5, 1, 4, 2);
+      numbers.stream().sorted(Comparator.reverseOrder()).forEach(System.out::println);
+      
+      "Apple".chars().boxed().collect(Collectors.groupingBy(c->c, Collectors.counting()))
+      // .forEach((k,v)-> System.out::println((char)k + "" +v));
+      .forEach((k, v) -> System.out.println( (char) k.intValue() + " = " + v));
+      
+      Map<Character,Long> mp = "Banana".chars().mapToObj(c -> (char)c)
+      .collect(Collectors.groupingBy(c->c, Collectors.counting()));
+      mp.forEach((k, v) -> System.out.println(k + " = " + v));
+      
+      List<Integer> number = Arrays.asList(1, 2, 3, 4, 5);
+      int sum = number.stream()
+          .mapToInt(Integer::intValue)
+
+          .sum();
+      System.out.println(sum);
+      
+      int ao= IntStream.of(1,2,3,4,5,6,7).sum();
+      System.out.println(ao);
+      
+      HashSet<Integer> set = IntStream.of(1,2,3,4,5,6,7,5,6,8,3)
+      .boxed().collect(Collectors.toCollection(HashSet::new));
+      System.out.println(set);
+      
+      List<String> words = Arrays.asList("Java", "Stream", "API", "Code", "Fun");
+      Map<Integer, List<String>> groupedByLength = words.stream()
+          .collect(Collectors.groupingBy(String::length));
+      System.out.println(groupedByLength);
+      
+      String freqChar = "success";
+      freqChar.chars().mapToObj(c -> (char) c)
+      .collect(Collectors
+      .groupingBy(c -> c, Collectors.counting()))
+      .entrySet().stream()
+      .max(Map.Entry.comparingByValue())
+      .map(Map.Entry::getKey)
+      .ifPresent(e -> System.out.println(e));
+  }
+}
+
+import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+
+        String str = "Applea Valley";
+
+        // Define vowels (lowercase and uppercase)
+        Set<Character> vowels = Set.of('a','e','i','o','u','A','E','I','O','U');
+
+        // Split string into words and count vowels in each word
+        // Map<String, Long> mp = 
+        long coin = Stream.of(str.split("\\s"))
+                .collect(Collectors.toMap(
+                        word -> word, 
+                        word -> word.chars() // IntStream of characters
+                                .mapToObj(c -> (char)c) // convert int -> char
+                                .filter(vowels::contains) // keep only vowels
+                                .count()
+                ))
+                .values().stream().max(Long::compare).orElse(0L);
+                
+                System.out.println(coin);
+
+        // System.out.println(mp);
+    }
+}
+
+
+ String str = "Applea Valley pen";
+        Stream.of(str.split(" "))
+        .collect(Collectors.groupingBy(String::length))
+        .entrySet().stream()
+        .sorted((e1, e2) -> e2.getKey().compareTo(e1.getKey())) // .skip(1) to find second lar
+        .findFirst()
+        .ifPresent(entry -> {System.out.println(entry.getKey() + " "+ entry.getValue());});
+
+
+public class Main {
+    public static void main(String[] args) {
+        String str = "Applea Valley pen";
+        char cl = Stream.of(str.split("")).map(c-> c.toLowerCase())
+        .collect(Collectors.groupingBy(c-> c, LinkedHashMap::new, Collectors.counting()))
+        .entrySet()
+        .stream()
+        .filter(e -> e.getValue() == 1)
+        .map(e -> e.getKey().charAt(0))
+        .findFirst().orElse('\0');
+        
+        System.out.println(cl);
+    }  
+}
+
