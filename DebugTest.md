@@ -95,3 +95,22 @@ public class UserController {
 500 Internal Server Error: Server error
 
 429 Too Many Requests
+
+
+=======================================
+
+
+Object
+ └── Throwable
+      ├── Error
+      │    ├── OutOfMemoryError
+      │    └── StackOverflowError
+      │
+      └── Exception
+           ├── IOException (checked)
+           ├── SQLException (checked)
+           │
+           └── RuntimeException (unchecked)
+                ├── NullPointerException
+                ├── ArithmeticException
+                └── IllegalArgumentException

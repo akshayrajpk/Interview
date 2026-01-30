@@ -36,6 +36,10 @@ Call Service by Name :
 
 Spring Cloud LoadBalancer provides default round-robin.
 
+# @LoadBalanced is used ONLY when:
+A Spring component needs to call another microservice by SERVICE NAME over HTTP
+Used with RestTemplate WebClient
+
 @Bean
 @LoadBalanced on Rest template bean
 

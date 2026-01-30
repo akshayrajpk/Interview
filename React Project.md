@@ -191,3 +191,178 @@ export default function Dashboard() {
 ## Tech Stack
 React, Redux Toolkit, React Router v6
 
+
+
+# Parent component
+
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo
+} from 'react';
+import ChildForm from './ChildForm';
+
+const ParentForm = () => {
+
+  const initialForm = {
+      personal: {
+        firstName: '',
+        lastName: ''
+      },
+      address: {
+        city: '',
+        country: ''
+      },
+      preferences: {
+        newsletter: false,
+        roles: []
+      }
+    };
+
+
+  const [formData, setFormData] = useState(initialForm);
+  const [isValid, setIsValid] = useState(false);
+
+  // Callback to receive data from child
+  const handleChildChange = useCallback((section, data) => {
+    setFormData(prev => ({
+      ...prev,
+      [section]: data
+    }));
+  }, []);
+
+  // Derived state (reactive)
+  const fullName = useMemo(() => {
+    return `${formData.personal.firstName} ${formData.personal.lastName}`.trim();
+  }, [formData.personal]);
+
+  // Validation watcher
+  useEffect(() => {
+    const valid =
+      formData.personal.firstName &&
+      formData.personal.lastName &&
+      formData.address.city;
+
+    setIsValid(Boolean(valid));
+  }, [formData]);
+
+  return (
+    <div>
+      <h2>Parent Form</h2>
+      <p><b>Full Name:</b> {fullName}</p>
+
+      <ChildForm
+        personal={formData.personal}
+        address={formData.address}
+        onChange={handleChildChange}
+      />
+
+      <button disabled={!isValid}>
+        Submit
+      </button>
+    </div>
+  );
+};
+
+export default ParentForm;
+
+
+# Child Component
+
+import React, {
+  useState,
+  useEffect,
+  useRef
+} from 'react';
+
+const ChildForm = ({ personal, address, onChange }) => {
+
+  const [localPersonal, setLocalPersonal] = useState(personal);
+  const [localAddress, setLocalAddress] = useState(address);
+
+  const firstInputRef = useRef(null);
+
+  // Focus first input on mount
+  useEffect(() => {
+    firstInputRef.current.focus();
+  }, []);
+
+  // Sync parent → child
+  useEffect(() => {
+    setLocalPersonal(personal);
+  }, [personal]);
+
+  useEffect(() => {
+    setLocalAddress(address);
+  }, [address]);
+
+  // Child → Parent communication
+  useEffect(() => {
+    onChange('personal', localPersonal);
+  }, [localPersonal, onChange]);
+
+  useEffect(() => {
+    onChange('address', localAddress);
+  }, [localAddress, onChange]);
+
+  return (
+    <div>
+      <h3>Child Form</h3>
+
+      <input
+        ref={firstInputRef}
+        type="text"
+        placeholder="First Name"
+        value={localPersonal.firstName}
+        onChange={e =>
+          setLocalPersonal({
+            ...localPersonal,
+            firstName: e.target.value
+          })
+        }
+      />
+
+      <input
+        type="text"
+        placeholder="Last Name"
+        value={localPersonal.lastName}
+        onChange={e =>
+          setLocalPersonal({
+            ...localPersonal,
+            lastName: e.target.value
+          })
+        }
+      />
+
+      <input
+        type="text"
+        placeholder="City"
+        value={localAddress.city}
+        onChange={e =>
+          setLocalAddress({
+            ...localAddress,
+            city: e.target.value
+          })
+        }
+      />
+
+      <input
+        type="text"
+        placeholder="Country"
+        value={localAddress.country}
+        onChange={e =>
+          setLocalAddress({
+            ...localAddress,
+            country: e.target.value
+          })
+        }
+      />
+    </div>
+  );
+};
+
+export default ChildForm;
+
+
+
