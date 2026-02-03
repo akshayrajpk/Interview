@@ -231,3 +231,136 @@ Reentrant: A thread can acquire the lock multiple times if it already holds it. 
     }
 
 
+=================================================
+class A {
+    private final Object lock = new Object();
+    private int[] data;
+
+    public int[] read() {
+        synchronized (lock) {
+            return data.clone();
+        }
+    }
+
+    public void write(int[] newData) {
+        synchronized (lock) {
+            data = newData.clone();
+        }
+    }
+}
+
+
+==================================
+Reentrant: 
+if (lock.tryLock()) {
+    try {
+        // critical section
+    } finally {
+        lock.unlock();
+    }
+}
+
+Tries to acquire lock
+If unavailable → moves on
+No deadlock
+
+tryLock(timeout) — deadlock recovery
+
+# Deadlock avoidance code:
+
+boolean gotLock1 = lock1.tryLock(1, TimeUnit.SECONDS);
+boolean gotLock2 = lock2.tryLock(1, TimeUnit.SECONDS);
+
+if (gotLock1 && gotLock2) {
+    try {
+        // safe work
+    } finally {
+        lock2.unlock();
+        lock1.unlock();
+    }
+} else {
+    if (gotLock1) lock1.unlock();
+    if (gotLock2) lock2.unlock();
+}
+
+Deadlock happens when ALL four hold:
+
+Mutual exclusion
+
+Hold and wait
+
+No preemption
+
+Circular wait
+
+tryLock() breaks hold-and-wait or circular wait.
+
+---------------------------------------------
+
+synchronized(ClassName.class)
+    This acquires a CLASS-LEVEL LOCK.
+    Only one thread in the entire JVM can enter this block
+    Applies across all instances of that class
+
+
+================= Instance lock vs Class lock (VERY IMPORTANT)===========
+Instance-level lock
+public synchronized int getValue() { }
+
+Equivalent to:
+synchronized (this) { }
+
+✔ One lock per object
+✔ Better concurrency
+
+
+------------------------
+private AtomicInteger count = new AtomicInteger();
+
+public int increment() {
+    return count.incrementAndGet();
+}
+
+“synchronized(ClassName.class) provides a class-level lock to protect static shared state, but it should be used sparingly. For getters/setters, lighter mechanisms like volatile or atomic variables are preferred.”
+
+
+Need visibility only? → volatile
+Need atomic counter? → Atomic
+Need consistency across variables? → synchronized
+
+------------------------------------------------------
+# Volatile:
+
+private volatile boolean running = true;
+
+while (running) {
+   // loop until another thread sets running = false
+}
+
+Use volatile when:
+    One thread writes, many read
+    Simple flags
+    State signals
+
+# synchronized void increment() {
+   count++;
+}
+
+What it does
+    Acquires monitor lock
+    Blocks other threads
+    Releases lock (flushes memory)
+
+Downsides
+    Blocking
+    Context switching
+    Scalability issues under contention
+
+==============================================
+AtomicInteger count = new AtomicInteger();
+
+count.incrementAndGet();
+
+
+Example 2: Counter
+AtomicInteger count = new AtomicInteger();

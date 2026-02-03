@@ -47,13 +47,13 @@ public class Main {
     public static String longestPalindrome(String s) {
         if (s == null || s.length() < 1) return "";
         int start = 0, end = 0;
-        // Expand around center: Two cases, odd-length and even-length palindromes
+// Expand around center: Two cases, odd-length and even-length palindromes
         for (int i = 0; i < s.length(); i++) {
-    // Odd-length palindromes (expand around one character)
+// Odd-length palindromes (expand around one character)
             int len1 = expandAroundCenter(s, i, i);
-    // Even-length palindromes (expand around two characters)
+// Even-length palindromes (expand around two characters)
             int len2 = expandAroundCenter(s, i, i + 1);            
-    // Find the longest palindrome
+// Find the longest palindrome
             int len = Math.max(len1, len2);
             if (len > end - start) {
                 start = i - (len - 1) / 2;
@@ -397,5 +397,39 @@ int[] arr = {3,2,3,2,3,2};
          a++;         
      }     
      Arrays.stream(ans).forEach(System.out::println);
+
+
+# public class SearchInsertPosition {
+
+    public static int searchInsertPosition(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+
+        // Perform binary search
+        while (left <= right) {
+            int mid = left + (right - left) / 2; // To avoid overflow
+
+            if (nums[mid] == target) {
+                return mid; // If target is found, return the index
+            }
+            if (nums[mid] > target) {
+                right = mid - 1; // Target is smaller, search in the left half
+            } else {
+                left = mid + 1; // Target is larger, search in the right half
+            }
+        }
+
+        // If the target is not found, return the position where it can be inserted
+        return left; // left will be at the correct insertion position
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        System.out.println(searchInsertPosition(new int[]{1, 3, 4, 5}, 2)); // Output: 1
+        System.out.println(searchInsertPosition(new int[]{1, 3, 4, 5}, 7)); // Output: 4
+        System.out.println(searchInsertPosition(new int[]{1, 3, 4, 5}, 0)); // Output: 0
+        System.out.println(searchInsertPosition(new int[]{1, 3, 4, 5}, 4)); // Output: 2
+    }
+}
+
 
 
