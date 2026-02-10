@@ -8,7 +8,7 @@ https://www.youtube.com/watch?v=Q4XUptm9S8w fukk oda
 
 https://www.youtube.com/watch?v=RqfaTIWc3LQ 
 
-client -> Route 53 region -> cdn -> firewall -> LB (app, network) -> ApiGateway (auth, ) -> LB -> Cache -> services -> Kafka
+client -> Route 53 region -> cdn -> firewall -> External LB (app, network) -> ApiGateway (auth, ) -> LB -> Cache -> services -> Kafka
 
 @Enable eureka server and @Enable eureka client @loadbalanced
 

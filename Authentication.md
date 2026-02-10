@@ -28,7 +28,8 @@ Angular 16 Client (Browser)
     Token Exchange (Next Step): Your server (backend) takes the code and exchanges it for an Access Token and ID Token by making a server-to-server call to Okta's /token endpoint. 
 
     --------------------------------------------------
-    Step 1: User initiates login
+
+Step 1: User initiates login
 
 User clicks "Login" in Angular app.
 
@@ -72,9 +73,29 @@ Angular        Spring Boot        Okta
    |<--tokens--------|              |
    |                 |              |
    |---API call------|-->validate-->| JWT valid
-   |                 |<------------|
+   |                 |<-------------|
    |<--response------|              |
    |                 |              |
+
+
+400 – Bad Request
+Use when:
+
+Invalid JSON
+Missing required fields
+Validation failed
+
+401 – Unauthorized
+403 – Forbidden User is authenticated but not allowed
+404 – Not Found Resource doesn’t exist
+
+409 – Conflict (VERY IMPORTANT)
+Use when: Resource conflict, Duplicate data
+
+500 – Internal Server Error
+502 – Bad Gateway
+503 – Service Unavailable
+504 – Gateway Timeout
 
 
 @RestController

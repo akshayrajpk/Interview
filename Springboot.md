@@ -1,167 +1,380 @@
-Design patterns:
-https://www.designgurus.io/blog/19-essential-microservices-patterns-for-system-design-interviews?gad_source=1&gad_campaignid=23163907085&gclid=EAIaIQobChMIxJ7DxbOGkgMV36dmAh3Fqif0EAAYASAAEgK0bPD_BwE
+Springboot versions
 
-Prototype in singleton:
-@Component
-public class SingletonBean {
-    @Autowired
-    private ObjectProvider<PrototypeBean> prototypeProvider;
-    public void process() {
-        PrototypeBean prototype = prototypeProvider.getObject();
-        prototype.doWork();
+2.5 2021
+2.7 2023
+
+
+-------------------------------------
+
+400 – Bad Request
+Use when:
+
+Invalid JSON
+Missing required fields
+Validation failed
+
+401 – Unauthorized
+403 – Forbidden User is authenticated but not allowed
+404 – Not Found Resource doesn’t exist
+
+409 – Conflict (VERY IMPORTANT)
+Use when: Resource conflict, Duplicate data
+
+500 – Internal Server Error
+502 – Bad Gateway
+503 – Service Unavailable
+504 – Gateway Timeout
+
+===================================
+
+public class ApiResponse<T> {
+
+    private boolean success;
+    private int status;
+    private String message;
+    private T data;
+    private Instant timestamp;
+
+    public ApiResponse(boolean success, int status, String message, T data) {
+        this.success = success;
+        this.status = status;
+        this.message = message;
+        this.data = data;
+        this.timestamp = Instant.now();
+    }
+
+    // getters
+}
+
+
+public class ResponseUtil {
+    public static <T> ResponseEntity<ApiResponse<T>> ok(
+            String message, T data) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, 200, message, data));
+    }
+
+    public static <T> ResponseEntity<ApiResponse<T>> created(
+            String message, T data) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, 201, message, data));
+    }
+
+    public static ResponseEntity<ApiResponse<Void>> badRequest(
+            String message) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(false, 400, message, null));
     }
 }
-@Component
-public class SingletonBean {
-    public void process() {
-        PrototypeBean prototype = getPrototype();
-        prototype.doWork();
+
+# DTO
+public record UserResponse(Long id, String name, String email) {}
+public record CreateUserRequest(String name, String email) {}
+public record UpdateUserRequest(String name, String email) {}
+public record PatchUserRequest(String name) {}
+
+======================================================================
+
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    private final UserService service;
+
+    public UserController(UserService service) {
+        this.service = service;
     }
-    @Lookup
-    protected PrototypeBean getPrototype() {
-        return null; // Spring overrides this
+
+    /* ---------------- GET ---------------- */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponse>> getById(
+            @PathVariable Long id) {
+
+        UserResponse user = service.getById(id);
+
+        return ResponseUtil.ok("User fetched successfully", user);
+    }
+
+    /* ---------------- POST ---------------- */
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<UserResponse>> create(
+            @RequestBody CreateUserRequest request) {
+
+        UserResponse createdUser = service.create(request);
+
+        return ResponseUtil.created(
+                "User created successfully", createdUser);
+    }
+
+    /* ---------------- PUT ---------------- */
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponse>> update(
+            @PathVariable Long id,
+            @RequestBody UpdateUserRequest request) {
+
+        UserResponse updated = service.update(id, request);
+
+        return ResponseUtil.ok("User fully updated", updated);
+    }
+
+    /* ---------------- PATCH ---------------- */
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponse>> patch(
+            @PathVariable Long id,
+            @RequestBody PatchUserRequest request) {
+
+        UserResponse patched = service.patch(id, request);
+
+        return ResponseUtil.ok("User partially updated", patched);
     }
 }
-=========================================================================================
-Bean Lifecycle
-
-Constructor --> @Autowired
-↓
-BeanNameAware
-↓
-BeanFactoryAware
-↓
-ApplicationContextAware
-↓
-BeanPostProcessor.beforeInit
-↓
-@PostConstruct
-↓
-InitializingBean.afterPropertiesSet
-↓
-Custom init-method
-↓
-BeanPostProcessor.afterInit
-↓
-READY
-
-The Spring IoC container initializes by reading configuration and building bean definitions, then instantiates singleton beans, resolves dependencies via constructor or setter injection, applies BeanFactoryPostProcessors and BeanPostProcessors, creates proxies for AOP concerns like transactions and security, manages the full bean lifecycle, and finally exposes fully initialized beans via the ApplicationContext.
 
 
-====================================
-@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers("/public/**").permitAll() // Public access
-                    .requestMatchers("/admin/**").hasRole("ADMIN") // Role-based access
-                    .anyRequest().authenticated() // All other requests require authentication
-            );
-        return http.build();
-    }
+========= Service -==================
+public interface UserService {
 
-=============================================
+    UserResponse create(CreateUserRequest request);
+
+    UserResponse getById(Long id);
+
+    UserResponse update(Long id, UpdateUserRequest request);
+
+    UserResponse patch(Long id, PatchUserRequest request);
+
+    void delete(Long id);
+}
+
 @Service
-public class ProductService {
+@Transactional
+public class UserServiceImpl implements UserService {
 
-    // Only users with the 'ADMIN' role can access this method
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteProduct(Long productId) {
-        // business logic
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    // Only the user whose username matches the 'username' argument can access this method
-    @PreAuthorize("#username == authentication.principal.username")
-    public UserProfile getUserProfile(String username) {
-        // business logic
+    /* ---------------- CREATE ---------------- */
+
+    @Override
+    public UserResponse create(CreateUserRequest request) {
+
+        // Business validation
+        if (userRepository.existsByEmail(request.email())) {
+            throw new BusinessException("Email already exists");
+        }
+
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+
+        User saved = userRepository.save(user);
+
+        return mapToResponse(saved);
+    }
+
+    /* ---------------- GET ---------------- */
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse getById(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found with id " + id));
+
+        return mapToResponse(user);
+    }
+
+    /* ---------------- PUT (FULL UPDATE) ---------------- */
+
+    @Override
+    public UserResponse update(Long id, UpdateUserRequest request) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found with id " + id));
+
+        // FULL REPLACEMENT
+        user.setName(request.name());
+        user.setEmail(request.email());
+
+        return mapToResponse(userRepository.save(user));
+    }
+
+    /* ---------------- PATCH (PARTIAL UPDATE) ---------------- */
+
+    @Override
+    public UserResponse patch(Long id, PatchUserRequest request) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found with id " + id));
+
+        // PARTIAL UPDATE
+        if (request.name() != null) {
+            user.setName(request.name());
+        }
+
+        return mapToResponse(userRepository.save(user));
+    }
+
+    /* ---------------- DELETE ---------------- */
+
+    @Override
+    public void delete(Long id) {
+
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException(
+                    "User not found with id " + id);
+        }
+
+        userRepository.deleteById(id);
+    }
+
+    /* ---------------- MAPPER ---------------- */
+
+    private UserResponse mapToResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 }
 
+
+
+=====================
+@PutMapping("/users/{id}")
+public User updateUser(
+    @PathVariable Long id,
+    @RequestBody User request
+) {
+    User existing = userRepo.findById(id)
+        .orElseThrow(() -> new NotFoundException());
+
+    // PUT → replace
+    existing.setName(request.getName());
+    existing.setEmail(request.getEmail());
+    existing.setPhone(request.getPhone()); // can become null
+
+    return userRepo.save(existing);
+}
+
+@PatchMapping("/users/{id}")
+public User patchUser(
+    @PathVariable Long id,
+    @RequestBody Map<String, Object> updates
+) {
+    User existing = userRepo.findById(id)
+        .orElseThrow(() -> new NotFoundException());
+
+    if (updates.containsKey("name")) {
+        existing.setName((String) updates.get("name"));
+    }
+
+    if (updates.containsKey("email")) {
+        existing.setEmail((String) updates.get("email"));
+    }
+
+    return userRepo.save(existing);
+}
+===================== With Builder =========================
+
+@PutMapping("/users/{id}")
+public User replaceUser(
+        @PathVariable Long id,
+        @RequestBody UserRequest request) {
+
+    User existing = userRepo.findById(id)
+            .orElseThrow(() -> new NotFoundException());
+
+    User updated = User.builder()
+            .id(existing.getId())          // preserve identity
+            .name(request.getName())
+            .email(request.getEmail())
+            .phone(request.getPhone())     // may be null → correct
+            .createdAt(existing.getCreatedAt())
+            .build();
+
+    return userRepo.save(updated);
+}
+
+DTO Patch 
+
+@Data
+public class UserPatchRequest {
+    private Optional<String> name = Optional.empty();
+    private Optional<String> email = Optional.empty();
+    private Optional<String> phone = Optional.empty();
+}
+
+@PatchMapping("/users/{id}")
+public User patchUser(
+        @PathVariable Long id,
+        @Valid @RequestBody UserPatchRequest request) {
+
+    User existing = userRepo.findById(id)
+            .orElseThrow(() -> new NotFoundException());
+
+    User updated = User.builder()
+            .id(existing.getId())
+            .name(request.getName().orElse(existing.getName()))
+            .email(request.getEmail().orElse(existing.getEmail()))
+            .phone(request.getPhone().orElse(existing.getPhone()))
+            .createdAt(existing.getCreatedAt())
+            .build();
+
+    return userRepo.save(updated);
+}
 
 ========================================
-Validations 
+# Dto validations
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+public record AddressRequest(
+    @NotBlank
+    String street,
 
-public class UserRequest {
+    @NotBlank
+    String city,
+
+    @Pattern(
+        regexp = "\\d{5,6}",
+        message = "Invalid zip code"
+    )
+    String zipCode
+) {}
+
+public record CreateUserRequest(
 
     @NotBlank(message = "Name is mandatory")
-    @Size(min = 2, max = 30)
-    private String name;
+    @Size(min = 2, max = 100)
+    String name,
 
     @NotBlank(message = "Email is mandatory")
-    @Email(message = "Please provide a valid email")
-    private String email;
+    @Email(message = "Invalid email format")
+    @Size(max = 150)
+    String email
+) {}
 
-    // Getters and setters...
+====================================================================
+# Status
+@PostMapping
+public ResponseEntity<UserResponse> create(@RequestBody UserRequest req) {
+    UserResponse saved = service.create(req);
+    return ResponseEntity
+#            .status(HttpStatus.CREATED)
+            .body(saved);
 }
 
-//Controller
 
-@PostMapping("/users")
-    public ResponseEntity<String> addUser(@Valid @RequestBody UserRequest userRequest) {
-        // Business logic if validation passes
-        return ResponseEntity.ok("User is valid");
-    }
-
-
-# permgen vs metaspace
-
-# volatile vs atomic keyword in java
-
-| Memory Area   | Description                                                 | Lifetime / Management                                    | Size Limits                                            |
-| ------------- | ----------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------ |
-| **Stack**     | Stores method calls and local variables                     | Automatically managed; space is freed when method exits. | Fixed size (can cause `StackOverflowError`)            |
-| **Heap**      | Stores objects created using `new`                          | Managed by **Garbage Collector**                         | Configurable via `-Xmx` (max size)                     |
-| **Metaspace** | Stores class metadata (class definitions, static variables) | Managed by JVM, dynamically grows (in Java 8+)           | Dynamic size; configurable with `-XX:MaxMetaspaceSize` |
-
-
-==================================================================
-
-application-{profile}.properties
----
-spring:
-  profiles: dev
-server:
-  port: 8081
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/dev_db
-    username: dev_user
-    password: dev_password
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
-@Configuration
-public class DataSourceConfig {
-    // Injecting values from application-dev.properties or application-prod.properties
-    @Value("${db.url}")
-    private String dbUrl;
-
-    @Value("${db.username}")
-    private String dbUsername;
-
-    @Value("${db.password}")
-    private String dbPassword;
-
-    // Development profile bean
-    @Bean
-    @Profile("dev")
-    public DataSource devDataSource() {
-        return new DataSource(dbUrl, dbUsername, dbPassword);
-    }
-
-    // Production profile bean
-    @Bean
-    @Profile("prod")
-    public DataSource prodDataSource() {
-        return new DataSource(dbUrl, dbUsername, dbPassword);
-    }
-}
 
