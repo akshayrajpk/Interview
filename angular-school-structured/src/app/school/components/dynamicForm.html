@@ -1,0 +1,24 @@
+<form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+  <label>Student Name:</label>
+  <input formControlName="studentName">
+
+  <hr>
+  <h3>Skills</h3>
+  <button type="button" (click)="addSkill()">+ Add Skill</button>
+
+  <div formArrayName="skills">
+    <!-- Loop through the controls in the FormArray -->
+    <div *ngFor="let skillGroup of skills.controls; let i=index" [formGroupName]="i">
+      
+      <input formControlName="skill" placeholder="Skill Name">
+      <input formControlName="exp" placeholder="Years of Experience">
+      
+      <button type="button" (click)="removeSkill(i)">Remove</button>
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="!studentForm.valid">Submit Data</button>
+</form>
+
+<!-- Displaying live data -->
+<pre>{{ studentForm.value | json }}</pre>
